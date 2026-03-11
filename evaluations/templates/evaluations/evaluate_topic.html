@@ -1,0 +1,299 @@
+{% extends 'evaluations/base.html' %}
+{% load i18n %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="card shadow-sm mb-4">
+  <div class="card-header bg-primary text-white">
+    <h4 class="mb-0">
+      <i class="bi bi-clipboard-check"></i> {% trans "Оценка темы" %}
+    </h4>
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">{{ topic.name }}</h5>
+    <p class="text-muted mb-4">
+      <strong>{% trans "Программа:" %}</strong> {{ topic.program.name }}
+      {% if topic.class_level %}
+        <span class="badge badge-secondary ml-2">{{ topic.class_level }}</span>
+      {% endif %}
+    </p>
+    {% if existing_evaluation and existing_evaluation.completed_at and existing_evaluation.can_re_evaluate %}
+      <div class="alert alert-info mb-4">
+        <i class="bi bi-info-circle"></i> 
+        {% trans "Вам предоставлен доступ для переоценки этой темы. Вы можете изменить свои ответы." %}
+      </div>
+    {% endif %}
+
+    <form method="post" id="evaluationForm">
+      {% csrf_token %}
+
+      <!-- Основные критерии -->
+      <div class="mb-5">
+        <h5 class="mb-3 pb-2 border-bottom">
+          <i class="bi bi-list-check"></i> {% trans "Основные критерии оценки" %}
+          <small class="text-muted">({% trans "выберите уровень: 1, 2 или 3" %})</small>
+        </h5>
+
+        {% for c in main_criteria %}
+          <div class="card mb-3" style="border-left: 4px solid #007bff;">
+            <div class="card-body">
+              <div class="d-flex align-items-start mb-3">
+                <span class="badge badge-primary badge-pill mr-3" style="min-width: 35px; height: 35px; display: inline-flex; align-items: center; justify-content: center; font-size: 1rem;">
+                  {{ forloop.counter }}
+                </span>
+                <div class="flex-grow-1">
+                  <h6 class="card-title mb-2 font-weight-bold">{{ c.display_name }}</h6>
+                  {% if c.display_description %}
+                    <div class="text-muted small mb-3" style="white-space: pre-line; line-height: 1.6;">
+                      {{ c.display_description|linebreaks }}
+                    </div>
+                  {% endif %}
+                  
+                  <!-- Радиокнопки с красивым оформлением -->
+                  <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label class="btn btn-outline-primary">
+                      <input type="radio" name="main_{{ c.id }}" value="1" required autocomplete="off">
+                      <strong>1</strong>
+                      <small class="d-block">{% trans "Уровень 1" %}</small>
+                    </label>
+                    <label class="btn btn-outline-primary">
+                      <input type="radio" name="main_{{ c.id }}" value="2" required autocomplete="off">
+                      <strong>2</strong>
+                      <small class="d-block">{% trans "Уровень 2" %}</small>
+                    </label>
+                    <label class="btn btn-outline-primary">
+                      <input type="radio" name="main_{{ c.id }}" value="3" required autocomplete="off">
+                      <strong>3</strong>
+                      <small class="d-block">{% trans "Уровень 3" %}</small>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <!-- Дополнительные критерии -->
+      <div class="mb-5">
+        <h5 class="mb-3 pb-2 border-bottom">
+          <i class="bi bi-question-circle"></i> {% trans "Дополнительные вопросы" %}
+          <small class="text-muted">({% trans "введите целое число" %})</small>
+        </h5>
+
+        {% for c in extra_criteria %}
+          <div class="card mb-3" style="border-left: 4px solid #28a745;">
+            <div class="card-body">
+              <div class="d-flex align-items-start mb-3">
+                <span class="badge badge-success badge-pill mr-3" style="min-width: 35px; height: 35px; display: inline-flex; align-items: center; justify-content: center; font-size: 1rem;">
+                  {{ forloop.counter }}
+                </span>
+                <div class="flex-grow-1">
+                  <h6 class="card-title mb-2 font-weight-bold">{{ c.display_name }}</h6>
+                  {% if c.display_description %}
+                    <div class="text-muted small mb-3" style="white-space: pre-line; line-height: 1.6;">
+                      {{ c.display_description|linebreaks }}
+                    </div>
+                  {% endif %}
+                  
+                  <!-- Поле ввода целого числа -->
+                  <div class="form-group">
+                    <input 
+                      type="number" 
+                      name="extra_{{ c.id }}" 
+                      class="form-control" 
+                      style="max-width: 200px;"
+                      min="0" 
+                      step="1" 
+                      required 
+                      placeholder="{% trans 'Введите число' %}"
+                    >
+                    <small class="form-text text-muted">
+                      {% trans "Введите целое число (например, количество часов)" %}
+                    </small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <!-- Комментарий -->
+      <div class="mb-4">
+        <div class="card" style="border-left: 4px solid #17a2b8;">
+          <div class="card-body">
+            <h6 class="card-title mb-3">
+              <i class="bi bi-chat-left-text"></i> {% trans "Комментарии и предложения" %}
+            </h6>
+            <textarea 
+              name="comment" 
+              class="form-control" 
+              rows="4" 
+              placeholder="{% trans 'Введите ваши комментарии, замечания или предложения по данной теме...' %}"
+            ></textarea>
+            <small class="form-text text-muted">
+              {% trans "Это поле необязательно для заполнения" %}
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Кнопки действий -->
+      <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+        <a href="{% url 'topics' topic.program.id %}" class="btn btn-secondary" id="backButton">
+          <i class="bi bi-arrow-left"></i> {% trans "Назад к темам" %}
+        </a>
+        <div>
+          <span id="unsavedIndicator" class="badge badge-warning mr-2" style="display: none;">
+            <i class="bi bi-exclamation-triangle"></i> {% trans "Есть несохраненные изменения" %}
+          </span>
+          <button type="submit" class="btn btn-primary btn-lg">
+            <i class="bi bi-check-circle"></i> {% trans "Сохранить оценку" %}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Скрытые элементы для переводов JavaScript -->
+<span id="unsaved-warning-text" style="display: none;">{% trans "У вас есть несохраненные изменения. Вы уверены, что хотите покинуть страницу?" %}</span>
+<span id="unsaved-warning-back-text" style="display: none;">{% trans "У вас есть несохраненные изменения. Вы уверены, что хотите покинуть страницу без сохранения?" %}</span>
+
+<style>
+  .btn-group-toggle .btn {
+    min-width: 100px;
+    padding: 10px 15px;
+  }
+  
+  .btn-group-toggle .btn input[type="radio"] {
+    position: absolute;
+    clip: rect(0,0,0,0);
+    pointer-events: none;
+  }
+  
+  .btn-group-toggle .btn.active {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
+  }
+  
+  .btn-group-toggle .btn-outline-success.active {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: white;
+  }
+  
+  .btn-group-toggle .btn-outline-danger.active {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+  }
+  
+  .card {
+    transition: box-shadow 0.2s;
+  }
+  
+  .card:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15) !important;
+  }
+  
+  .card-body h6 {
+    color: #333;
+  }
+</style>
+
+<script>
+  // Подсветка выбранных радиокнопок
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('evaluationForm');
+    const radioButtons = form.querySelectorAll('input[type="radio"]');
+    const textarea = form.querySelector('textarea[name="comment"]');
+    let formChanged = false;
+    
+    // Индикатор несохраненных изменений
+    const unsavedIndicator = document.getElementById('unsavedIndicator');
+    
+    // Отслеживание изменений формы
+    function markFormChanged() {
+      formChanged = true;
+      if (unsavedIndicator) {
+        unsavedIndicator.style.display = 'inline-block';
+      }
+    }
+    
+    function resetFormChanged() {
+      formChanged = false;
+      if (unsavedIndicator) {
+        unsavedIndicator.style.display = 'none';
+      }
+    }
+    
+    // Отслеживание изменений радиокнопок
+    radioButtons.forEach(function(radio) {
+      radio.addEventListener('change', function() {
+        markFormChanged();
+        
+        // Убираем active у всех кнопок в группе
+        const group = this.closest('.btn-group');
+        if (group) {
+          group.querySelectorAll('.btn').forEach(function(btn) {
+            btn.classList.remove('active');
+          });
+          // Добавляем active к выбранной
+          this.closest('label').classList.add('active');
+        }
+      });
+    });
+    
+    // Отслеживание изменений текстового поля
+    if (textarea) {
+      textarea.addEventListener('input', markFormChanged);
+    }
+    
+    // Получаем переведенные строки из скрытых элементов
+    const unsavedWarning = document.getElementById('unsaved-warning-text') ? document.getElementById('unsaved-warning-text').textContent : 'У вас есть несохраненные изменения. Вы уверены, что хотите покинуть страницу?';
+    const unsavedWarningBack = document.getElementById('unsaved-warning-back-text') ? document.getElementById('unsaved-warning-back-text').textContent : 'У вас есть несохраненные изменения. Вы уверены, что хотите покинуть страницу без сохранения?';
+    
+    // Предупреждение при попытке уйти со страницы с несохраненными изменениями
+    window.addEventListener('beforeunload', function(e) {
+      if (formChanged) {
+        e.preventDefault();
+        e.returnValue = unsavedWarning;
+        return e.returnValue;
+      }
+    });
+    
+    // Предупреждение при клике на ссылки
+    document.querySelectorAll('a').forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        if (formChanged) {
+          if (!confirm(unsavedWarning)) {
+            e.preventDefault();
+            return false;
+          }
+        }
+      });
+    });
+    
+    // Сброс флага при успешной отправке формы
+    form.addEventListener('submit', function() {
+      resetFormChanged();
+    });
+    
+    // Предупреждение при нажатии кнопки "Назад"
+    const backButton = document.getElementById('backButton');
+    if (backButton) {
+      backButton.addEventListener('click', function(e) {
+        if (formChanged) {
+          if (!confirm(unsavedWarningBack)) {
+            e.preventDefault();
+            return false;
+          }
+        }
+      });
+    }
+  });
+</script>
+{% endblock %}

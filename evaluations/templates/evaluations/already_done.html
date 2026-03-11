@@ -1,0 +1,7 @@
+{% extends 'evaluations/base.html' %}
+{% block content %}
+  <div class="alert alert-info">
+    Вы уже оценили тему «{{ topic.name }}» в программе «{{ program.name }}».
+  </div>
+  <a href="{% url 'topics' program.id %}" class="btn btn-secondary">Вернуться к темам</a>
+{% endblock %}

@@ -1,0 +1,216 @@
+{% extends 'evaluations/base.html' %}
+{% load i18n %}
+{% block content %}
+
+<div class="card-no shadow-sm mb-4">
+  <div class="card-header bg-primary text-white">
+    <h4 class="mb-0">
+      <i class="bi bi-folder2-open"></i> {% trans "Выберите образовательную программу" %}
+    </h4>
+  </div>
+  <div class="card-body">
+    <p class="text-muted mb-4">
+      {% trans "Выберите программу для оценки. Вы можете продолжить оценку незавершенных программ или начать новую." %}
+    </p>
+    <div class="mb-4">
+      <input
+          type="text"
+          id="programSearch"
+          class="form-control"
+          placeholder = '{% trans "Поиск программы..." %}'>
+    </div>
+
+    {% if completed_programs or partial_programs or not_started_programs %}
+
+      {% if completed_programs %}
+        <h5 class="mb-3">
+          <span class="badge bg-success me-2"><i class="bi bi-check-circle"></i></span>
+          {% trans "Завершенные программы" %}
+        </h5>
+        <div class="row row-cols-1 row-cols-md-2 g-3 mb-4">
+          {% for item in completed_programs %}
+            <div class="col program-card" data-name="{{ item.program.name }}">
+              <div class="card h-100 shadow-sm"  style="transition: transform 0.2s; border-left: 4px solid #28a745;">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-start mb-3">
+                    <h5 class="card-title mb-0 font-weight-bold">
+                      <i class="bi bi-book"></i> {{ item.program.name }}
+                    </h5>
+                    <span class="badge badge-success badge-pill">
+                      <i class="bi bi-check-circle"></i> {% trans "Завершено" %}
+                    </span>
+                  </div>
+                  
+                  <div class="mb-3">
+                    <div class="progress" style="height: 8px;">
+                      {% if item.total > 0 %}
+                        {% widthratio item.evaluated item.total 100 as progress_percent %}
+                      {% else %}
+                        {% widthratio 0 1 100 as progress_percent %}
+                      {% endif %}
+                      <div class="progress-bar bg-success" 
+                        role="progressbar" 
+                        style="width: {{ progress_percent }}%" 
+                        aria-valuenow="{{ progress_percent }}" 
+                        aria-valuemin="0" 
+                        aria-valuemax="100">
+                      </div>
+                    </div>
+                    <small class="text-muted">
+                      {% trans "Оценено тем:" %} <strong>{{ item.evaluated }}</strong> / <strong>{{ item.total }}</strong>
+                    </small>
+                  </div>
+
+                  <a href="{% url 'topics' item.program.id %}" class="btn btn-primary btn-block">
+                    <i class="bi bi-arrow-right-circle"></i> 
+                    {% trans "Просмотреть результаты" %}
+                  </a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if partial_programs %}
+        <h5 class="mb-3">
+          <span class="badge bg-warning text-dark me-2"><i class="bi bi-clock-history"></i></span>
+          {% trans "Частично оцененные программы" %}
+        </h5>
+        <div class="row row-cols-1 row-cols-md-2 g-3 mb-4">
+          {% for item in partial_programs %}
+            <div class="col program-card" data-name="{{ item.program.name }}">
+              <div class="card h-100 shadow-sm"  style="transition: transform 0.2s; border-left: 4px solid #ffc107;">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-start mb-3">
+                    <h5 class="card-title mb-0 font-weight-bold">
+                      <i class="bi bi-book"></i> {{ item.program.name }}
+                    </h5>
+                    <span class="badge badge-warning badge-pill">
+                      <i class="bi bi-clock-history"></i> {% trans "Частично" %}
+                    </span>
+                  </div>
+                  
+                  <div class="mb-3">
+                    <div class="progress" style="height: 8px;">
+                      {% if item.total > 0 %}
+                        {% widthratio item.evaluated item.total 100 as progress_percent %}
+                      {% else %}
+                        {% widthratio 0 1 100 as progress_percent %}
+                      {% endif %}
+                      <div class="progress-bar bg-warning" 
+                        role="progressbar" 
+                        style="width: {{ progress_percent }}%" 
+                        aria-valuenow="{{ progress_percent }}" 
+                        aria-valuemin="0" 
+                        aria-valuemax="100">
+                      </div>
+                    </div>
+                    <small class="text-muted">
+                      {% trans "Оценено тем:" %} <strong>{{ item.evaluated }}</strong> / <strong>{{ item.total }}</strong>
+                    </small>
+                  </div>
+
+                  <a href="{% url 'topics' item.program.id %}" class="btn btn-primary btn-block">
+                    <i class="bi bi-arrow-right-circle"></i> 
+                    {% trans "Продолжить оценку" %}
+                  </a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if not_started_programs %}
+        <h5 class="mb-3">
+          <span class="badge bg-secondary me-2"><i class="bi bi-circle"></i></span>
+          {% trans "Не начатые программы" %}
+        </h5>
+        <div class="row row-cols-1 row-cols-md-2 g-3 mb-2">
+          {% for item in not_started_programs %}
+            <div class="col program-card" data-name="{{ item.program.name }}">
+              <div class="card h-100 shadow-sm"  style="transition: transform 0.2s; border-left: 4px solid #6c757d;">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-start mb-3">
+                    <h5 class="card-title mb-0 font-weight-bold">
+                      <i class="bi bi-book"></i> {{ item.program.name }}
+                    </h5>
+                    <span class="badge badge-secondary badge-pill">
+                      <i class="bi bi-circle"></i> {% trans "Не начато" %}
+                    </span>
+                  </div>
+                  
+                  <div class="mb-3">
+                    <div class="progress" style="height: 8px;">
+                      {% if item.total > 0 %}
+                        {% widthratio item.evaluated item.total 100 as progress_percent %}
+                      {% else %}
+                        {% widthratio 0 1 100 as progress_percent %}
+                      {% endif %}
+                      <div class="progress-bar bg-secondary" 
+                        role="progressbar" 
+                        style="width: {{ progress_percent }}%" 
+                        aria-valuenow="{{ progress_percent }}" 
+                        aria-valuemin="0" 
+                        aria-valuemax="100">
+                      </div>
+                    </div>
+                    <small class="text-muted">
+                      {% trans "Оценено тем:" %} <strong>{{ item.evaluated }}</strong> / <strong>{{ item.total }}</strong>
+                    </small>
+                  </div>
+
+                  <a href="{% url 'topics' item.program.id %}" class="btn btn-primary btn-block">
+                    <i class="bi bi-arrow-right-circle"></i> 
+                    {% trans "Начать оценку" %}
+                  </a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+    {% else %}
+      <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> {% trans "Нет доступных программ для оценки." %}
+      </div>
+    {% endif %}
+  </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("programSearch");
+
+    searchInput.addEventListener("input", function () {
+        const query = this.value.toLowerCase().trim();
+
+        const cards = document.querySelectorAll(".program-card");
+
+        cards.forEach(card => {
+            const name = card.getAttribute("data-name").toLowerCase();
+            card.style.display = name.includes(query) ? "" : "none";
+        });
+    });
+});
+</script>
+</div>
+
+<style>
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15) !important;
+  }
+  
+  .progress {
+    border-radius: 10px;
+    background-color: #e9ecef;
+  }
+  
+  .progress-bar {
+    border-radius: 10px;
+  }
+</style>
+
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends 'manager/base.html' %}
+{% block content %}
+
+<h3>Подтвердите импорт</h3>
+
+<p>
+    Новые программы:
+    <strong>
+        {% with counter=0 %}
+        {% for p in analysis %}
+            {% if not p.exists %}
+                {% widthratio 1 1 1 %}
+            {% endif %}
+        {% endfor %}
+        {% endwith %}
+    </strong>,
+    существующие:
+    <strong>
+        {% with counter=0 %}
+        {% for p in analysis %}
+            {% if p.exists %}
+                {% widthratio 1 1 1 %}
+            {% endif %}
+        {% endfor %}
+        {% endwith %}
+    </strong>
+</p>
+
+<form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="confirm" value="1">
+    <input type="hidden" name="data" value='{{ json_data|safe  }}'>
+
+    <div class="row">
+
+        <div class="col-md-6">
+            <h5>Новые программы</h5>
+            <ul class="list-group mb-3">
+                {% with found=0 %}
+                {% for p in analysis %}
+                    {% if not p.exists %}
+                        {% with found=1 %}
+                        {% endwith %}
+                        <li class="list-group-item">
+                            <strong>{{ p.name }}</strong>
+                            <div class="small text-muted">Тем: {{ p.topics|length }}</div>
+
+                            <div class="mt-2">
+                                {% for t in p.topics %}
+                                    • {{ t.topic }}{% if t.level %} ({{ t.level }}){% endif %}<br>
+                                {% endfor %}
+                            </div>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if found == 0 %}
+                    <li class="list-group-item text-muted">Нет новых программ</li>
+                {% endif %}
+                {% endwith %}
+            </ul>
+        </div>
+
+        <div class="col-md-6">
+            <h5>Существующие программы</h5>
+            <ul class="list-group mb-3">
+                {% with found=0 %}
+                {% for p in analysis %}
+                    {% if p.exists %}
+                        {% with found=1 %}
+                        {% endwith %}
+                        <li class="list-group-item">
+                            <strong>{{ p.name }}</strong>
+                            <div class="small text-muted">Тем: {{ p.topics|length }}</div>
+
+                            <div class="mt-2">
+                                {% for t in p.topics %}
+                                    • {{ t.topic }}{% if t.level %} ({{ t.level }}){% endif %}<br>
+                                {% endfor %}
+                            </div>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if found == 0 %}
+                    <li class="list-group-item text-muted">Нет существующих</li>
+                {% endif %}
+                {% endwith %}
+            </ul>
+        </div>
+
+    </div>
+
+    <a href="{% url 'manager_import' %}" class="btn btn-secondary">Отмена</a>
+    <button class="btn btn-primary">Подтвердить импорт</button>
+</form>
+
+{% endblock %}

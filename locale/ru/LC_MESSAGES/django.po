@@ -1,0 +1,326 @@
+# Translations for Russian
+# Copyright (C) 2025
+# This file is distributed under the same license as the PACKAGE package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Program Evaluation 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-30 12:00+0000\n"
+"PO-Revision-Date: 2025-11-30 12:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: Russian\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: evaluations/templates/evaluations/base.html
+msgid "Оценивание программ"
+msgstr "Оценивание программ"
+
+#: evaluations/templates/evaluations/base.html
+msgid "Главная"
+msgstr "Главная"
+
+#: evaluations/templates/evaluations/base.html
+msgid "Программы"
+msgstr "Программы"
+
+#: evaluations/templates/evaluations/base.html
+msgid "Выйти"
+msgstr "Выйти"
+
+#: evaluations/templates/evaluations/base.html
+msgid "Войти"
+msgstr "Войти"
+
+#: evaluations/templates/evaluations/base.html
+msgid "Пользователь"
+msgstr "Пользователь"
+
+#: evaluations/templates/evaluations/base.html
+msgid "Русский"
+msgstr "Русский"
+
+#: evaluations/templates/evaluations/base.html
+msgid "Система оценивания образовательных программ"
+msgstr "Система оценивания образовательных программ"
+
+#: evaluations/templates/evaluations/base.html
+msgid "Вы уверены, что хотите выйти?"
+msgstr "Вы уверены, что хотите выйти?"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Добро пожаловать!"
+msgstr "Добро пожаловать!"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Шаг 1 — Введите ваши данные"
+msgstr "Шаг 1 — Введите ваши данные"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Информация:"
+msgstr "Информация:"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Если вы уже проходили оценку, введите тот же номер телефона, и вы сможете продолжить с того места, где остановились."
+msgstr "Если вы уже проходили оценку, введите тот же номер телефона, и вы сможете продолжить с того места, где остановились."
+
+#: evaluations/templates/evaluations/start.html
+msgid "ФИО"
+msgstr "ФИО"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Введите ваше полное имя"
+msgstr "Введите ваше полное имя"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Укажите ваше полное имя (Фамилия Имя Отчество)"
+msgstr "Укажите ваше полное имя (Фамилия Имя Отчество)"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Номер телефона"
+msgstr "Номер телефона"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Формат: <strong>+7XXXXXXXXXX</strong> (10 цифр после +7). Если вы уже оценивали программы, введите тот же номер."
+msgstr "Формат: <strong>+7XXXXXXXXXX</strong> (10 цифр после +7). Если вы уже оценивали программы, введите тот же номер."
+
+#: evaluations/templates/evaluations/start.html
+msgid "Ваши данные защищены"
+msgstr "Ваши данные защищены"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Продолжить"
+msgstr "Продолжить"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Как это работает?"
+msgstr "Как это работает?"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Шаг 1:"
+msgstr "Шаг 1:"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Введите ваши данные (вы здесь)"
+msgstr "Введите ваши данные (вы здесь)"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Шаг 2:"
+msgstr "Шаг 2:"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Выберите образовательную программу"
+msgstr "Выберите образовательную программу"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Шаг 3:"
+msgstr "Шаг 3:"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Оцените темы программы по критериям"
+msgstr "Оцените темы программы по критериям"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Шаг 4:"
+msgstr "Шаг 4:"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Просмотрите результаты"
+msgstr "Просмотрите результаты"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Номер должен быть в формате +7XXXXXXXXXX (10 цифр после +7)"
+msgstr "Номер должен быть в формате +7XXXXXXXXXX (10 цифр после +7)"
+
+#: evaluations/templates/evaluations/programs.html
+msgid "Выберите программу для оценки. Вы можете продолжить оценку незавершенных программ или начать новую."
+msgstr "Выберите программу для оценки. Вы можете продолжить оценку незавершенных программ или начать новую."
+
+#: evaluations/templates/evaluations/programs.html
+msgid "Завершено"
+msgstr "Завершено"
+
+#: evaluations/templates/evaluations/programs.html
+msgid "Частично"
+msgstr "Частично"
+
+#: evaluations/templates/evaluations/programs.html
+msgid "Не начато"
+msgstr "Не начато"
+
+#: evaluations/templates/evaluations/programs.html
+msgid "Оценено тем:"
+msgstr "Оценено тем:"
+
+#: evaluations/templates/evaluations/programs.html
+msgid "из"
+msgstr "из"
+
+#: evaluations/templates/evaluations/programs.html
+msgid "Просмотреть результаты"
+msgstr "Просмотреть результаты"
+
+#: evaluations/templates/evaluations/programs.html
+msgid "Продолжить оценку"
+msgstr "Продолжить оценку"
+
+#: evaluations/templates/evaluations/programs.html
+msgid "Начать оценку"
+msgstr "Начать оценку"
+
+#: evaluations/templates/evaluations/programs.html
+msgid "Нет доступных программ для оценки."
+msgstr "Нет доступных программ для оценки."
+
+#: evaluations/templates/evaluations/topics.html
+msgid "Темы программы:"
+msgstr "Темы программы:"
+
+#: evaluations/templates/evaluations/topics.html
+msgid "Оцените все темы программы. Темы сгруппированы по классам."
+msgstr "Оцените все темы программы. Темы сгруппированы по классам."
+
+#: evaluations/templates/evaluations/topics.html
+msgid "Оценено"
+msgstr "Оценено"
+
+#: evaluations/templates/evaluations/topics.html
+msgid "Оценить"
+msgstr "Оценить"
+
+#: evaluations/templates/evaluations/topics.html
+msgid "В этой программе пока нет тем."
+msgstr "В этой программе пока нет тем."
+
+#: evaluations/templates/evaluations/topics.html
+msgid "Прогресс выполнения"
+msgstr "Прогресс выполнения"
+
+#: evaluations/templates/evaluations/topics.html
+msgid "Оцените все темы для завершения программы"
+msgstr "Оцените все темы для завершения программы"
+
+#: evaluations/templates/evaluations/topics.html
+msgid "Поздравляем!"
+msgstr "Поздравляем!"
+
+#: evaluations/templates/evaluations/topics.html
+msgid "Вы успешно оценили все темы программы"
+msgstr "Вы успешно оценили все темы программы"
+
+#: evaluations/templates/evaluations/topics.html
+msgid "Выбрать другую программу"
+msgstr "Выбрать другую программу"
+
+#: evaluations/templates/evaluations/topics.html
+msgid "Посмотреть результаты по программе"
+msgstr "Посмотреть результаты по программе"
+
+#: evaluations/templates/evaluations/topics.html
+msgid "Назад к программам"
+msgstr "Назад к программам"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "Оценка темы"
+msgstr "Оценка темы"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "Программа:"
+msgstr "Программа:"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "Основные критерии оценки"
+msgstr "Основные критерии оценки"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "выберите уровень: 1, 2 или 3"
+msgstr "выберите уровень: 1, 2 или 3"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "Уровень 1"
+msgstr "Уровень 1"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "Уровень 2"
+msgstr "Уровень 2"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "Уровень 3"
+msgstr "Уровень 3"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "Дополнительные вопросы"
+msgstr "Дополнительные вопросы"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "ответьте: Да или Нет"
+msgstr "ответьте: Да или Нет"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "Да"
+msgstr "Да"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "Нет"
+msgstr "Нет"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "Комментарии и предложения"
+msgstr "Комментарии и предложения"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "Введите ваши комментарии, замечания или предложения по данной теме..."
+msgstr "Введите ваши комментарии, замечания или предложения по данной теме..."
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "Это поле необязательно для заполнения"
+msgstr "Это поле необязательно для заполнения"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "Назад к темам"
+msgstr "Назад к темам"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "Есть несохраненные изменения"
+msgstr "Есть несохраненные изменения"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "Сохранить оценку"
+msgstr "Сохранить оценку"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "У вас есть несохраненные изменения. Вы уверены, что хотите покинуть страницу?"
+msgstr "У вас есть несохраненные изменения. Вы уверены, что хотите покинуть страницу?"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "У вас есть несохраненные изменения. Вы уверены, что хотите покинуть страницу без сохранения?"
+msgstr "У вас есть несохраненные изменения. Вы уверены, что хотите покинуть страницу без сохранения?"
+
+#: evaluations/templates/evaluations/results.html
+msgid "Результаты по программе:"
+msgstr "Результаты по программе:"
+
+#: evaluations/templates/evaluations/results.html
+msgid "Экспорт в CSV"
+msgstr "Экспорт в CSV"
+
+#: evaluations/templates/evaluations/results.html
+msgid "Вернуться к программам"
+msgstr "Вернуться к программам"
+
+#: evaluations/templates/evaluations/results.html
+msgid "Тема"
+msgstr "Тема"
+
+#: evaluations/templates/evaluations/results.html
+msgid "Комментарий"
+msgstr "Комментарий"
+
+#: evaluations/templates/evaluations/results.html
+msgid "Нет данных для отображения"
+msgstr "Нет данных для отображения"
+

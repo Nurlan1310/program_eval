@@ -1,0 +1,61 @@
+{% extends 'evaluations/base.html' %}
+{% load i18n %}
+{% block content %}
+  <h3>{% trans "Результаты по программе:" %} {{ program.name }}</h3>
+  
+  <div class="mb-3">
+    <a href="{% url 'export_program_csv' program.id %}" class="btn btn-outline-primary">
+      <i class="bi bi-file-earmark-spreadsheet"></i> {% trans "Экспорт в CSV" %}
+    </a>
+    <a href="{% url 'programs' %}" class="btn btn-secondary ms-2">{% trans "Вернуться к программам" %}</a>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead class="table-light">
+        <tr>
+          <th>{% trans "Тема" %}</th>
+          {% for c in main_criteria %}
+            <th>{{ c.name }}</th>
+          {% endfor %}
+          {% for c in extra_criteria %}
+            <th>{{ c.name }}</th>
+          {% endfor %}
+          <th>{% trans "Комментарий" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in results_data %}
+          <tr>
+            <td><strong>{{ r.topic.name }}</strong></td>
+            {% for answer in r.main_answers %}
+              <td class="text-center">
+                {% if answer is not None %}
+                  {{ answer }}
+                {% else %}
+                  <span class="text-muted">—</span>
+                {% endif %}
+              </td>
+            {% endfor %}
+            {% for answer in r.extra_answers %}
+              <td class="text-center">
+                {% if answer is not None %}
+                  {{ answer }}
+                {% else %}
+                  <span class="text-muted">—</span>
+                {% endif %}
+              </td>
+            {% endfor %}
+            <td>{{ r.comment|default:"—" }}</td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="{{ main_criteria|length|add:extra_criteria|length|add:2 }}" class="text-center text-muted">
+              {% trans "Нет данных для отображения" %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

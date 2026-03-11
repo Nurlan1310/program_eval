@@ -1,0 +1,258 @@
+{% extends 'manager/base.html' %}
+{% block content %}
+
+<!-- Breadcrumbs -->
+{% if breadcrumbs %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    {% for title, url in breadcrumbs %}
+      {% if url %}
+        <li class="breadcrumb-item"><a href="{{ url }}">{{ title }}</a></li>
+      {% else %}
+        <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+      {% endif %}
+    {% endfor %}
+  </ol>
+</nav>
+{% endif %}
+
+<h3 class="mb-3">Детальная статистика: {{ program.name }}</h3>
+
+<!-- Общая статистика -->
+<div class="row mb-4">
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="card-subtitle mb-2 text-muted">Всего оценивающих</h6>
+        <h4 class="card-title">{{ total_evaluators }}</h4>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="card-subtitle mb-2 text-muted">Полностью завершили</h6>
+        <h4 class="card-title text-success">{{ fully_completed_count }}</h4>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="card-subtitle mb-2 text-muted">Частично завершили</h6>
+        <h4 class="card-title text-warning">{{ partially_completed_count }}</h4>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Детальная статистика по каждому оценивающему -->
+<div class="card shadow-sm">
+  <div class="card-header">
+    <h5 class="mb-0">Статистика по оценивающим</h5>
+  </div>
+  <div class="card-body">
+    {% for stat in evaluator_stats %}
+      <div class="card mb-3">
+        <div class="card-header bg-light">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="mb-0">
+                <strong>{{ stat.evaluator.full_name }}</strong>
+                <span class="badge {% if stat.is_fully_completed %}bg-success{% else %}bg-warning{% endif %} ms-2">
+                  {% if stat.is_fully_completed %}
+                    Полностью завершено
+                  {% else %}
+                    Частично завершено ({{ stat.completed_topics }}/{{ stat.total_topics }})
+                  {% endif %}
+                </span>
+              </h6>
+              <small class="text-muted">{{ stat.evaluator.phone }}</small>
+            </div>
+            <div>
+              <button
+                class="btn btn-sm btn-outline-primary grant-access-program-btn"
+                data-evaluator-id="{{ stat.evaluator.id }}"
+                data-program-id="{{ program.id }}"
+                data-evaluator-name="{{ stat.evaluator.full_name }}"
+                data-program-name="{{ program.name }}"
+              >
+                Переоценка программы
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-sm table-bordered">
+              <thead class="table-light">
+                <tr>
+                  <th>Тема</th>
+                  <th>Статус</th>
+                  <th>Дата оценки</th>
+                  <th>Действия</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for topic_detail in stat.topics_detail %}
+                  <tr>
+                    <td>
+                      <strong>{{ topic_detail.topic.name }}</strong>
+                      {% if topic_detail.topic.class_level %}
+                        <span class="badge bg-info ms-2">{{ topic_detail.topic.class_level }}</span>
+                      {% endif %}
+                    </td>
+                    <td>
+                      {% if topic_detail.is_completed %}
+                        <span class="badge bg-success">Оценено</span>
+                      {% else %}
+                        <span class="badge bg-secondary">Не оценено</span>
+                      {% endif %}
+                    </td>
+                    <td>
+                      {% if topic_detail.completed_at %}
+                        {{ topic_detail.completed_at|date:"d.m.Y H:i" }}
+                      {% else %}
+                        <span class="text-muted">—</span>
+                      {% endif %}
+                    </td>
+                    <td>
+                      {% if topic_detail.is_completed %}
+                        {% if topic_detail.can_re_evaluate %}
+                          <span class="badge bg-info">Доступ на переоценку открыт</span>
+                        {% else %}
+                          <button 
+                            class="btn btn-sm btn-primary grant-access-btn"
+                            data-evaluator-id="{{ stat.evaluator.id }}"
+                            data-topic-id="{{ topic_detail.topic.id }}"
+                            data-evaluator-name="{{ stat.evaluator.full_name }}"
+                            data-topic-name="{{ topic_detail.topic.name }}">
+                            Открыть доступ на переоценку
+                          </button>
+                        {% endif %}
+                      {% else %}
+                        <span class="text-muted">—</span>
+                      {% endif %}
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p class="text-muted">Нет данных об оценивающих</p>
+    {% endfor %}
+  </div>
+</div>
+
+<a href="{% url 'program_detail' program.id %}" class="btn btn-secondary mt-3">
+  <i class="bi bi-arrow-left"></i> Назад к программе
+</a>
+
+<script>
+// Получаем CSRF токен из cookies
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const buttons = document.querySelectorAll('.grant-access-btn');
+  const programButtons = document.querySelectorAll('.grant-access-program-btn');
+  const csrftoken = getCookie('csrftoken');
+  
+  buttons.forEach(function(button) {
+    button.addEventListener('click', function() {
+      const evaluatorId = this.getAttribute('data-evaluator-id');
+      const topicId = this.getAttribute('data-topic-id');
+      const evaluatorName = this.getAttribute('data-evaluator-name');
+      const topicName = this.getAttribute('data-topic-name');
+      
+      if (!confirm(`Предоставить доступ на переоценку темы "${topicName}" для ${evaluatorName}?`)) {
+        return;
+      }
+      
+      // Отправляем запрос
+      const formData = new FormData();
+      formData.append('evaluator_id', evaluatorId);
+      formData.append('topic_id', topicId);
+      
+      fetch('{% url "grant_re_evaluation_access" %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRFToken': csrftoken
+        },
+        credentials: 'same-origin'
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert(data.message);
+          location.reload();
+        } else {
+          alert('Ошибка: ' + data.error);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Произошла ошибка при отправке запроса');
+      });
+    });
+  });
+
+  programButtons.forEach(function(button) {
+    button.addEventListener('click', function() {
+      const evaluatorId = this.getAttribute('data-evaluator-id');
+      const programId = this.getAttribute('data-program-id');
+      const evaluatorName = this.getAttribute('data-evaluator-name');
+      const programName = this.getAttribute('data-program-name');
+
+      if (!confirm(`Предоставить доступ на переоценку всех тем программы "${programName}" для ${evaluatorName}?`)) {
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('evaluator_id', evaluatorId);
+      formData.append('program_id', programId);
+
+      fetch('{% url "grant_re_evaluation_access_program" %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRFToken': csrftoken
+        },
+        credentials: 'same-origin'
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert(data.message);
+          location.reload();
+        } else {
+          alert('Ошибка: ' + data.error);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Произошла ошибка при отправке запроса');
+      });
+    });
+  });
+});
+</script>
+
+{% endblock %}
+

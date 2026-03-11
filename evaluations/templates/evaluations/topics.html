@@ -1,0 +1,172 @@
+{% extends 'evaluations/base.html' %}
+{% load i18n %}
+{% block content %}
+
+<div class="card shadow-sm mb-4">
+  <div class="card-header bg-primary text-white">
+    <h4 class="mb-0">
+      <i class="bi bi-list-task"></i> {% trans "Темы программы:" %} {{ program.name }}
+    </h4>
+  </div>
+  <div class="card-body">
+    <p class="text-muted mb-4">
+      <i class="bi bi-info-circle"></i> {% trans "Оцените все темы программы. Темы сгруппированы по классам." %}
+    </p>
+
+    {% if grouped %}
+      {% for klass, topics in grouped.items %}
+        <div class="card mb-4 shadow-sm" style="border-left: 4px solid #007bff;">
+          <div class="card-header bg-light">
+            <h5 class="mb-0">
+              <i class="bi bi-collection"></i> {{ klass }}
+              <span class="badge badge-primary badge-pill ml-2">{{ topics|length }}</span>
+            </h5>
+          </div>
+          <div class="card-body p-0">
+            <div class="list-group list-group-flush">
+              {% for t, status, te in topics %}
+                <div class="list-group-item">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="flex-grow-1">
+                      <h6 class="mb-1">
+                        <i class="bi bi-file-text"></i> {{ t.name }}
+                      </h6>
+                      {% if t.class_level %}
+                        <small class="text-muted">
+                          <i class="bi bi-tag"></i> {{ t.class_level }}
+                        </small>
+                      {% endif %}
+                    </div>
+                    <div class="ml-3">
+                      {% if status == 'completed' %}
+                        <span class="badge badge-success badge-pill p-2">
+                          <i class="bi bi-check-circle"></i> {% trans "Оценено" %}
+                        </span>
+                      {% elif status == 'can_re_evaluate' %}
+                        <a href="{% url 'evaluate_topic' t.id %}" class="btn btn-info btn-sm">
+                          <i class="bi bi-arrow-repeat"></i> {% trans "Переоценить" %}
+                        </a>
+                      {% else %}
+                        <a href="{% url 'evaluate_topic' t.id %}" class="btn btn-outline-primary btn-sm">
+                          <i class="bi bi-pencil-square"></i> {% trans "Оценить" %}
+                        </a>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> {% trans "В этой программе пока нет тем." %}
+      </div>
+    {% endif %}
+
+    <!-- Прогресс выполнения -->
+    {% if grouped %}
+      <div class="card mb-4 bg-light">
+        <div class="card-body">
+          <h6 class="card-title mb-3">
+            <i class="bi bi-bar-chart"></i> {% trans "Прогресс выполнения" %}
+          </h6>
+          <div class="progress mb-2" style="height: 30px;">
+            <div class="progress-bar bg-success" 
+                 role="progressbar" 
+                 style="width: 0%" 
+                 id="progressBar">
+              <span id="progressText" style="font-weight: bold;">0%</span>
+            </div>
+          </div>
+          <small class="text-muted">
+            <i class="bi bi-info-circle"></i> {% trans "Оцените все темы для завершения программы" %}
+          </small>
+        </div>
+      </div>
+    {% endif %}
+
+    <!-- Сообщение о завершении -->
+    {% if all_completed %}
+      <div class="alert alert-success shadow-sm">
+        <h5 class="alert-heading">
+          <i class="bi bi-check-circle-fill"></i> {% trans "Поздравляем!" %}
+        </h5>
+        <p class="mb-0">{% trans "Вы успешно оценили все темы программы" %} <strong>{{ program.name }}</strong>.</p>
+      </div>
+      
+      <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+        <a href="{% url 'programs' %}" class="btn btn-secondary">
+          <i class="bi bi-arrow-left"></i> {% trans "Выбрать другую программу" %}
+        </a>
+        <a href="{% url 'program_results' program.id %}" class="btn btn-primary btn-lg">
+          <i class="bi bi-graph-up"></i> {% trans "Посмотреть результаты по программе" %}
+        </a>
+      </div>
+    {% else %}
+      <div class="d-flex justify-content-end pt-3 border-top">
+        <a href="{% url 'programs' %}" class="btn btn-secondary">
+          <i class="bi bi-arrow-left"></i> {% trans "Назад к программам" %}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  // Подсчет прогресса
+  document.addEventListener('DOMContentLoaded', function() {
+    const topics = document.querySelectorAll('.list-group-item');
+    let total = 0;
+    let completed = 0;
+    
+    topics.forEach(function(item) {
+      total++;
+      if (item.querySelector('.badge-success')) {
+        completed++;
+      }
+    });
+    
+    if (total > 0) {
+      const percent = Math.round((completed / total) * 100);
+      const progressBar = document.getElementById('progressBar');
+      const progressText = document.getElementById('progressText');
+      
+      if (progressBar && progressText) {
+        progressBar.style.width = percent + '%';
+        progressText.textContent = completed + ' / ' + total + ' (' + percent + '%)';
+      }
+    }
+  });
+</script>
+
+<style>
+  .card:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15) !important;
+  }
+  
+  .list-group-item {
+    transition: background-color 0.2s;
+  }
+  
+  .list-group-item:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .progress {
+    border-radius: 10px;
+    background-color: #e9ecef;
+  }
+  
+  .progress-bar {
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+  }
+</style>
+
+{% endblock %}

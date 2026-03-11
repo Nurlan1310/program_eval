@@ -1,0 +1,325 @@
+# Translations for Kazakh
+# Copyright (C) 2025
+# This file is distributed under the same license as the PACKAGE package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Program Evaluation 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-30 12:00+0000\n"
+"PO-Revision-Date: 2025-11-30 12:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: Kazakh\n"
+"Language: kk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: evaluations/templates/evaluations/base.html
+msgid "Оценивание программ"
+msgstr "Бағдарламаларды бағалау"
+
+#: evaluations/templates/evaluations/base.html
+msgid "Главная"
+msgstr "Басты бет"
+
+#: evaluations/templates/evaluations/base.html
+msgid "Программы"
+msgstr "Бағдарламалар"
+
+#: evaluations/templates/evaluations/base.html
+msgid "Выйти"
+msgstr "Шығу"
+
+#: evaluations/templates/evaluations/base.html
+msgid "Войти"
+msgstr "Кіру"
+
+#: evaluations/templates/evaluations/base.html
+msgid "Пользователь"
+msgstr "Пайдаланушы"
+
+#: evaluations/templates/evaluations/base.html
+msgid "Русский"
+msgstr "Орысша"
+
+#: evaluations/templates/evaluations/base.html
+msgid "Система оценивания образовательных программ"
+msgstr "Білім беру бағдарламаларын бағалау жүйесі"
+
+#: evaluations/templates/evaluations/base.html
+msgid "Вы уверены, что хотите выйти?"
+msgstr "Шығуды қалайсыз ба?"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Добро пожаловать!"
+msgstr "Қош келдіңіз!"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Шаг 1 — Введите ваши данные"
+msgstr "1-қадам — Деректеріңізді енгізіңіз"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Информация:"
+msgstr "Ақпарат:"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Если вы уже проходили оценку, введите тот же номер телефона, и вы сможете продолжить с того места, где остановились."
+msgstr "Егер сіз бағалауды өткен болсаңыз, сол телефон нөмірін енгізіңіз, сонда сіз тоқтаған жерден жалғастыра аласыз."
+
+#: evaluations/templates/evaluations/start.html
+msgid "ФИО"
+msgstr "Аты-жөні"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Введите ваше полное имя"
+msgstr "Толық аты-жөніңізді енгізіңіз"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Укажите ваше полное имя (Фамилия Имя Отчество)"
+msgstr "Толық аты-жөніңізді көрсетіңіз (Тегі Аты Әкесінің аты)"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Номер телефона"
+msgstr "Телефон нөмірі"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Формат: <strong>+7XXXXXXXXXX</strong> (10 цифр после +7). Если вы уже оценивали программы, введите тот же номер."
+msgstr "Формат: <strong>+7XXXXXXXXXX</strong> (+7-ден кейін 10 цифр). Егер сіз бағдарламаларды бағалаған болсаңыз, сол нөмірді енгізіңіз."
+
+#: evaluations/templates/evaluations/start.html
+msgid "Ваши данные защищены"
+msgstr "Сіздің деректеріңіз қорғалған"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Продолжить"
+msgstr "Жалғастыру"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Как это работает?"
+msgstr "Бұл қалай жұмыс істейді?"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Шаг 1:"
+msgstr "1-қадам:"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Введите ваши данные (вы здесь)"
+msgstr "Деректеріңізді енгізіңіз (сіз мұндасыз)"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Шаг 2:"
+msgstr "2-қадам:"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Выберите образовательную программу"
+msgstr "Білім беру бағдарламасын таңдаңыз"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Шаг 3:"
+msgstr "3-қадам:"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Оцените темы программы по критериям"
+msgstr "Бағдарлама тақырыптарын критерийлер бойынша бағалаңыз"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Шаг 4:"
+msgstr "4-қадам:"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Просмотрите результаты"
+msgstr "Нәтижелерді қараңыз"
+
+#: evaluations/templates/evaluations/start.html
+msgid "Номер должен быть в формате +7XXXXXXXXXX (10 цифр после +7)"
+msgstr "Нөмір +7XXXXXXXXXX форматында болуы керек (+7-ден кейін 10 цифр)"
+
+#: evaluations/templates/evaluations/programs.html
+msgid "Выберите программу для оценки. Вы можете продолжить оценку незавершенных программ или начать новую."
+msgstr "Бағалау үшін бағдарламаны таңдаңыз. Сіз аяқталмаған бағдарламаларды бағалауды жалғастыра аласыз немесе жаңасын бастай аласыз."
+
+#: evaluations/templates/evaluations/programs.html
+msgid "Завершено"
+msgstr "Аяқталды"
+
+#: evaluations/templates/evaluations/programs.html
+msgid "Частично"
+msgstr "Жартылай"
+
+#: evaluations/templates/evaluations/programs.html
+msgid "Не начато"
+msgstr "Басталмады"
+
+#: evaluations/templates/evaluations/programs.html
+msgid "Оценено тем:"
+msgstr "Бағаланған тақырыптар:"
+
+#: evaluations/templates/evaluations/programs.html
+msgid "из"
+msgstr "ішінен"
+
+#: evaluations/templates/evaluations/programs.html
+msgid "Просмотреть результаты"
+msgstr "Нәтижелерді қарау"
+
+#: evaluations/templates/evaluations/programs.html
+msgid "Продолжить оценку"
+msgstr "Бағалауды жалғастыру"
+
+#: evaluations/templates/evaluations/programs.html
+msgid "Начать оценку"
+msgstr "Бағалауды бастау"
+
+#: evaluations/templates/evaluations/programs.html
+msgid "Нет доступных программ для оценки."
+msgstr "Бағалауға қолжетімді бағдарламалар жоқ."
+
+#: evaluations/templates/evaluations/topics.html
+msgid "Темы программы:"
+msgstr "Бағдарлама тақырыптары:"
+
+#: evaluations/templates/evaluations/topics.html
+msgid "Оцените все темы программы. Темы сгруппированы по классам."
+msgstr "Бағдарламаның барлық тақырыптарын бағалаңыз. Тақырыптар сыныптар бойынша топталған."
+
+#: evaluations/templates/evaluations/topics.html
+msgid "Оценено"
+msgstr "Бағаланды"
+
+#: evaluations/templates/evaluations/topics.html
+msgid "Оценить"
+msgstr "Бағалау"
+
+#: evaluations/templates/evaluations/topics.html
+msgid "В этой программе пока нет тем."
+msgstr "Бұл бағдарламада әлі тақырыптар жоқ."
+
+#: evaluations/templates/evaluations/topics.html
+msgid "Прогресс выполнения"
+msgstr "Орындау прогрессі"
+
+#: evaluations/templates/evaluations/topics.html
+msgid "Оцените все темы для завершения программы"
+msgstr "Бағдарламаны аяқтау үшін барлық тақырыптарды бағалаңыз"
+
+#: evaluations/templates/evaluations/topics.html
+msgid "Поздравляем!"
+msgstr "Құттықтаймыз!"
+
+#: evaluations/templates/evaluations/topics.html
+msgid "Вы успешно оценили все темы программы"
+msgstr "Сіз бағдарламаның барлық тақырыптарын сәтті бағаладыңыз"
+
+#: evaluations/templates/evaluations/topics.html
+msgid "Выбрать другую программу"
+msgstr "Басқа бағдарламаны таңдау"
+
+#: evaluations/templates/evaluations/topics.html
+msgid "Посмотреть результаты по программе"
+msgstr "Бағдарлама бойынша нәтижелерді қарау"
+
+#: evaluations/templates/evaluations/topics.html
+msgid "Назад к программам"
+msgstr "Бағдарламаларға оралу"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "Оценка темы"
+msgstr "Тақырыпты бағалау"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "Программа:"
+msgstr "Бағдарлама:"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "Основные критерии оценки"
+msgstr "Бағалаудың негізгі критерийлері"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "выберите уровень: 1, 2 или 3"
+msgstr "деңгейді таңдаңыз: 1, 2 немесе 3"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "Уровень 1"
+msgstr "1-деңгей"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "Уровень 2"
+msgstr "2-деңгей"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "Уровень 3"
+msgstr "3-деңгей"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "Дополнительные вопросы"
+msgstr "Қосымша сұрақтар"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "ответьте: Да или Нет"
+msgstr "жауап беріңіз: Иә немесе Жоқ"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "Да"
+msgstr "Иә"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "Нет"
+msgstr "Жоқ"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "Комментарии и предложения"
+msgstr "Пікірлер мен ұсыныстар"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "Введите ваши комментарии, замечания или предложения по данной теме..."
+msgstr "Осы тақырып бойынша пікірлеріңізді, ескертулеріңізді немесе ұсыныстарыңызды енгізіңіз..."
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "Это поле необязательно для заполнения"
+msgstr "Бұл өріс толтыруға міндетті емес"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "Назад к темам"
+msgstr "Тақырыптарға оралу"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "Есть несохраненные изменения"
+msgstr "Сақталмаған өзгерістер бар"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "Сохранить оценку"
+msgstr "Бағалауды сақтау"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "У вас есть несохраненные изменения. Вы уверены, что хотите покинуть страницу?"
+msgstr "Сізде сақталмаған өзгерістер бар. Сіз беттен шығуды қалайсыз ба?"
+
+#: evaluations/templates/evaluations/evaluate_topic.html
+msgid "У вас есть несохраненные изменения. Вы уверены, что хотите покинуть страницу без сохранения?"
+msgstr "Сізде сақталмаған өзгерістер бар. Сіз сақталмай беттен шығуды қалайсыз ба?"
+
+#: evaluations/templates/evaluations/results.html
+msgid "Результаты по программе:"
+msgstr "Бағдарлама бойынша нәтижелер:"
+
+#: evaluations/templates/evaluations/results.html
+msgid "Экспорт в CSV"
+msgstr "CSV-ға экспорттау"
+
+#: evaluations/templates/evaluations/results.html
+msgid "Вернуться к программам"
+msgstr "Бағдарламаларға оралу"
+
+#: evaluations/templates/evaluations/results.html
+msgid "Тема"
+msgstr "Тақырып"
+
+#: evaluations/templates/evaluations/results.html
+msgid "Комментарий"
+msgstr "Пікір"
+
+#: evaluations/templates/evaluations/results.html
+msgid "Нет данных для отображения"
+msgstr "Көрсетуге деректер жоқ"

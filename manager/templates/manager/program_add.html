@@ -1,0 +1,10 @@
+{% extends 'manager/base.html' %}
+{% block content %}
+<h3>Добавить программу</h3>
+<div class="card shadow-sm p-3">
+<form method="post">{% csrf_token %}
+{{ form.as_p }}
+<button class="btn btn-primary">Сохранить</button>
+</form>
+</div>
+{% endblock %}

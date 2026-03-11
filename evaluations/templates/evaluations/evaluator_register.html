@@ -1,0 +1,25 @@
+{% extends 'evaluations/base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<h3 class="mb-4">Шаг 1 — Ваши данные</h3>
+
+<form method="post" class="card p-3 shadow-sm">
+    {% csrf_token %}
+
+    {{ form.non_field_errors }}
+
+    <div class="form-group mb-3">
+        {{ form.full_name.label_tag }}
+        {% render_field form.full_name class="form-control" %}
+    </div>
+
+    <div class="form-group mb-3">
+        {{ form.phone.label_tag }}
+        {% render_field form.phone class="form-control" %}
+    </div>
+
+    <button class="btn btn-primary" type="submit">Далее</button>
+</form>
+
+{% endblock %}

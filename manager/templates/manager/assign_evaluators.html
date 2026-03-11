@@ -1,0 +1,86 @@
+{% extends 'manager/base.html' %}
+{% block content %}
+
+<!-- Breadcrumbs -->
+{% if breadcrumbs %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    {% for title, url in breadcrumbs %}
+      {% if url %}
+        <li class="breadcrumb-item"><a href="{{ url }}">{{ title }}</a></li>
+      {% else %}
+        <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+      {% endif %}
+    {% endfor %}
+  </ol>
+</nav>
+{% endif %}
+
+<h3 class="mb-3">Закрепление оценщиков для программы: {{ program.name }}</h3>
+<p class="text-muted mb-4">
+  Выберите по 3 оценщика для каждого класса тем. Эти оценщики будут использоваться для расчета модальных значений.
+</p>
+
+<form method="post">
+  {% csrf_token %}
+  
+  {% for assignment_data in assignments_data %}
+    <div class="card mb-4">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Класс: {{ assignment_data.class_level }}</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-4">
+            <label class="form-label">Оценщик 1</label>
+            <select name="evaluator1_{{ assignment_data.class_level }}" class="form-select" required>
+              <option value="">-- Выберите --</option>
+              {% for evaluator in evaluators %}
+                <option value="{{ evaluator.id }}" 
+                  {% if assignment_data.evaluator1_id == evaluator.id %}selected{% endif %}>
+                  {{ evaluator.full_name }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Оценщик 2</label>
+            <select name="evaluator2_{{ assignment_data.class_level }}" class="form-select" required>
+              <option value="">-- Выберите --</option>
+              {% for evaluator in evaluators %}
+                <option value="{{ evaluator.id }}"
+                  {% if assignment_data.evaluator2_id == evaluator.id %}selected{% endif %}>
+                  {{ evaluator.full_name }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Оценщик 3</label>
+            <select name="evaluator3_{{ assignment_data.class_level }}" class="form-select" required>
+              <option value="">-- Выберите --</option>
+              {% for evaluator in evaluators %}
+                <option value="{{ evaluator.id }}"
+                  {% if assignment_data.evaluator3_id == evaluator.id %}selected{% endif %}>
+                  {{ evaluator.full_name }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+  
+  <div class="d-flex justify-content-between">
+    <a href="{% url 'program_detail' program.id %}" class="btn btn-secondary">
+      <i class="bi bi-arrow-left"></i> Назад
+    </a>
+    <button type="submit" class="btn btn-primary">
+      <i class="bi bi-save"></i> Сохранить закрепления
+    </button>
+  </div>
+</form>
+
+{% endblock %}
+

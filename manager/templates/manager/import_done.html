@@ -1,0 +1,6 @@
+{% extends 'manager/base.html' %}
+{% block content %}
+<h3>Импорт завершён</h3>
+<div class="alert alert-success">Создано программ: {{ created_programs }}, создано тем: {{ created_topics }}</div>
+<a href="{% url 'manager_index' %}" class="btn btn-primary">Вернуться</a>
+{% endblock %}

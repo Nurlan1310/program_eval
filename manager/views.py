@@ -1,15 +1,23 @@
 from django.core.paginator import Paginator
+from pathlib import Path
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group
 from django.core.exceptions import PermissionDenied
+from django.core.files.base import ContentFile
+from django.http import FileResponse, Http404
+from django.urls import reverse
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 import openpyxl, csv
+from django.conf import settings
 
 from evaluations.utils import log_action
-from .forms import ProgramForm, TopicForm, ImportForm
+from .ai_provider import generate_program_ai_report
+from .analytics import build_program_ai_context, build_program_overview, extract_document_text
+from .forms import ProgramForm, TopicForm, ImportForm, AIAnalyticsRunForm
+from .models import ProgramAIAnalysisRun
 from evaluations.models import Program, Topic, Criterion, TopicEvaluation, ProgramEvaluation, EvaluatorSession
 
 import json
@@ -3318,6 +3326,111 @@ def program_statistics(request, pk):
             ('Статистика', '')
         ]
     })
+
+
+@login_required
+def program_ai_analytics(request, pk):
+    if not is_subadmin(request.user):
+        raise PermissionDenied
+
+    program = get_object_or_404(Program, pk=pk)
+    overview = build_program_overview(program)
+    runs = ProgramAIAnalysisRun.objects.filter(program=program).select_related("created_by")
+    current_run = runs.first()
+    present_run_id = request.GET.get("present_run")
+    presentation_steps = [
+        "Изучаем методический документ и структуру программы",
+        "Сопоставляем оценки закрепленных оценщиков",
+        "Проверяем точные, допустимые и условные модальные значения",
+        "Собираем аналитический отчет по шаблону",
+    ]
+
+    if request.method == "POST":
+        form = AIAnalyticsRunForm(request.POST, request.FILES)
+        if form.is_valid():
+            uploaded_file = form.cleaned_data["methodology_file"]
+            file_bytes = uploaded_file.read()
+            document_text = extract_document_text(uploaded_file.name, file_bytes)
+            context_payload = build_program_ai_context(
+                program,
+                document_name=uploaded_file.name,
+                document_text=document_text,
+            )
+
+            run = ProgramAIAnalysisRun(
+                program=program,
+                created_by=request.user,
+                provider_key="stub",
+                status=ProgramAIAnalysisRun.STATUS_PENDING,
+                methodology_filename=uploaded_file.name,
+                methodology_excerpt=document_text[:4000],
+                context_json=context_payload,
+            )
+            run.methodology_file.save(uploaded_file.name, ContentFile(file_bytes), save=False)
+
+            try:
+                report_payload = generate_program_ai_report(
+                    context_payload,
+                    provider_key=run.provider_key,
+                )
+                context_payload["fake_report"] = report_payload
+                run.context_json = context_payload
+                run.result_text = report_payload["plain_text"]
+                run.status = ProgramAIAnalysisRun.STATUS_COMPLETED
+                log_action(
+                    request.user,
+                    "program_ai_analytics_run",
+                    "ProgramAIAnalysisRun",
+                    description=f'AI-аналитика для программы "{program.name}"',
+                )
+            except Exception as exc:
+                run.status = ProgramAIAnalysisRun.STATUS_FAILED
+                run.error_message = str(exc)
+
+            run.save()
+            return redirect(f"{reverse('program_ai_analytics', args=[program.id])}?present_run={run.id}")
+    else:
+        form = AIAnalyticsRunForm()
+
+    current_report = {}
+    should_present_run = False
+    if current_run:
+        current_report = current_run.context_json.get("fake_report", {})
+        should_present_run = str(current_run.id) == str(present_run_id) and current_run.status == ProgramAIAnalysisRun.STATUS_COMPLETED
+
+    return render(request, "manager/program_ai_analytics.html", {
+        "program": program,
+        "form": form,
+        "overview": overview,
+        "current_run": current_run,
+        "current_report": current_report,
+        "should_present_run": should_present_run,
+        "presentation_steps": presentation_steps,
+        "runs": runs[:10],
+        "breadcrumbs": [
+            ("Программы", "/manager/"),
+            (program.name, f"/manager/program/{program.id}/"),
+            ("Аналитика AI", ""),
+        ],
+    })
+
+
+@login_required
+def download_program_ai_pdf(request, pk):
+    if not is_subadmin(request.user):
+        raise PermissionDenied
+
+    get_object_or_404(Program, pk=pk)
+    pdf_path = Path(settings.BASE_DIR) / "report_from_ai_145_modal.pdf"
+    if not pdf_path.exists():
+        raise Http404("PDF file not found")
+
+    return FileResponse(
+        pdf_path.open("rb"),
+        as_attachment=True,
+        filename="ai_analytics_demo_report.pdf",
+        content_type="application/pdf",
+    )
 
 
 @login_required

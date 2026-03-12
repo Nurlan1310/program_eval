@@ -70,22 +70,22 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'program_evaluation.wsgi.application'
 
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': BASE_DIR / 'db.sqlite3',
-#    }
-#}
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'program_eval_db',
-        'USER': 'program_eval_user',
-        'PASSWORD': 'STRONG_PASSWORD',
-        'HOST': 'localhost',
-        'PORT': '3306',
-    }
+   'default': {
+       'ENGINE': 'django.db.backends.sqlite3',
+       'NAME': BASE_DIR / 'db.sqlite3',
+   }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'program_eval_db',
+#         'USER': 'program_eval_user',
+#         'PASSWORD': 'STRONG_PASSWORD',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#     }
+# }
 
 
 LOGIN_URL = '/manager/login/'
@@ -113,5 +113,7 @@ LOCALE_PATHS = [
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'evaluations' / 'static']
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

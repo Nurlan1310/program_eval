@@ -1,0 +1,427 @@
+{% extends 'manager/base.html' %}
+{% block content %}
+<style>
+  .ai-hero {
+    background: linear-gradient(135deg, #111827, #1d4ed8);
+    color: #fff;
+    border-radius: 1rem;
+    padding: 1.5rem;
+  }
+  .ai-report-shell {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 1rem;
+    overflow: hidden;
+  }
+  .ai-report-header {
+    background: linear-gradient(180deg, #f8fafc, #eef2ff);
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .ai-summary-chip {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 999px;
+    padding: 0.35rem 0.8rem;
+    font-size: 0.92rem;
+  }
+  .ai-think-card {
+    border: 1px dashed #93c5fd;
+    background: #eff6ff;
+  }
+  .ai-step {
+    opacity: 0.45;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  .ai-step.active,
+  .ai-step.done {
+    opacity: 1;
+    transform: translateX(0.15rem);
+  }
+  .ai-step-icon {
+    width: 2rem;
+    height: 2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: #dbeafe;
+    color: #1d4ed8;
+    font-weight: 700;
+  }
+  .ai-step.done .ai-step-icon {
+    background: #dcfce7;
+    color: #166534;
+  }
+  .ai-report-hidden {
+    display: none;
+  }
+  .ai-section {
+    border-bottom: 1px solid #eef2f7;
+  }
+  .ai-section:last-child {
+    border-bottom: 0;
+  }
+  .ai-section-title {
+    font-weight: 700;
+    color: #0f172a;
+  }
+  .ai-metric-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.85rem;
+  }
+  .ai-table {
+    font-size: 0.92rem;
+  }
+  .ai-badge-soft {
+    background: #eef2ff;
+    color: #3730a3;
+    border-radius: 999px;
+    padding: 0.35rem 0.7rem;
+    font-size: 0.85rem;
+  }
+</style>
+
+{% if breadcrumbs %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    {% for title, url in breadcrumbs %}
+      {% if url %}
+        <li class="breadcrumb-item"><a href="{{ url }}">{{ title }}</a></li>
+      {% else %}
+        <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+      {% endif %}
+    {% endfor %}
+  </ol>
+</nav>
+{% endif %}
+
+<div class="ai-hero shadow-sm mb-4">
+  <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+    <div>
+      <div class="text-uppercase small opacity-75 mb-2">Demo AI Analytics</div>
+      <h2 class="mb-2">Аналитика AI: {{ program.name }}</h2>
+      <p class="mb-3 opacity-75">
+        Демонстрационная презентация AI-отчета по программе на основе методички, оценок закрепленных экспертов и модальных значений.
+      </p>
+      <div class="d-flex flex-wrap gap-2">
+        <span class="ai-summary-chip">Тем: {{ overview.total_topics }}</span>
+        <span class="ai-summary-chip">Оценщиков: {{ overview.evaluators_count }}</span>
+        <span class="ai-summary-chip">Заполнение: {{ overview.completion_percent }}%</span>
+        <span class="ai-summary-chip">Закрепления: {{ overview.assignments_count }}</span>
+      </div>
+    </div>
+    <div class="d-flex gap-2">
+      <a href="{% url 'program_detail' program.id %}" class="btn btn-light">Назад к программе</a>
+      <a href="{% url 'download_program_ai_pdf' program.id %}" class="btn btn-outline-light">
+        <i class="bi bi-file-earmark-pdf"></i> Сохранить в PDF
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="row mb-4">
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="card-subtitle mb-2 text-muted">Тем в программе</h6>
+        <h4 class="card-title">{{ overview.total_topics }}</h4>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="card-subtitle mb-2 text-muted">Оценщиков</h6>
+        <h4 class="card-title">{{ overview.evaluators_count }}</h4>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="card-subtitle mb-2 text-muted">Заполнено оценок</h6>
+        <h4 class="card-title">{{ overview.completed_evaluations }}</h4>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="card-subtitle mb-2 text-muted">Заполнение</h6>
+        <h4 class="card-title">{{ overview.completion_percent }}%</h4>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if not overview.has_all_assignments %}
+<div class="alert alert-warning">
+  Для части классов еще не настроены закрепленные оценщики.
+  {% if overview.missing_classes %}
+    Не хватает закреплений для: <strong>{{ overview.missing_classes|join:", " }}</strong>.
+  {% endif %}
+</div>
+{% endif %}
+
+<div class="row g-4">
+  <div class="col-lg-5">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Запуск аналитики</h5>
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="mb-3">
+            {{ form.methodology_file.label_tag }}
+            {{ form.methodology_file }}
+            {% if form.methodology_file.help_text %}
+              <div class="form-text">{{ form.methodology_file.help_text }}</div>
+            {% endif %}
+            {% for error in form.methodology_file.errors %}
+              <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+          </div>
+          <button class="btn btn-dark">
+            <i class="bi bi-stars"></i> Запустить AI-аналитику
+          </button>
+        </form>
+        <div class="form-text mt-3">
+          После запуска интерфейс покажет постепенное формирование отчета в стиле AI-сервиса.
+        </div>
+      </div>
+    </div>
+
+    <div class="card shadow-sm mt-4">
+      <div class="card-body">
+        <h5 class="card-title mb-3">История запусков</h5>
+        {% if runs %}
+          <div class="table-responsive">
+            <table class="table table-sm align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>Дата</th>
+                  <th>Статус</th>
+                  <th>Файл</th>
+                  <th>Менеджер</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for run in runs %}
+                  <tr>
+                    <td>{{ run.created_at|date:"d.m.Y H:i" }}</td>
+                    <td>
+                      {% if run.status == 'completed' %}
+                        <span class="badge bg-success">Завершено</span>
+                      {% elif run.status == 'failed' %}
+                        <span class="badge bg-danger">Ошибка</span>
+                      {% else %}
+                        <span class="badge bg-secondary">Ожидает</span>
+                      {% endif %}
+                    </td>
+                    <td>
+                      <a href="{{ run.methodology_file.url }}" target="_blank" rel="noopener noreferrer">
+                        {{ run.methodology_filename }}
+                      </a>
+                    </td>
+                    <td>{{ run.created_by|default:"-" }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <p class="text-muted mb-0">Запусков еще не было.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-7">
+    {% if current_run %}
+      {% if current_run.error_message %}
+        <div class="alert alert-danger">{{ current_run.error_message }}</div>
+      {% endif %}
+
+      <div class="ai-report-shell shadow-sm">
+        <div class="ai-report-header p-4">
+          <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+            <div>
+              <div class="text-uppercase small text-muted mb-2">AI Presentation</div>
+              <h4 class="mb-1">{{ current_report.title|default:"Аналитический отчет" }}</h4>
+              <div class="text-muted">{{ current_report.subtitle }}</div>
+            </div>
+            <div class="text-end">
+              <div class="ai-badge-soft mb-2">{{ current_report.provider_label|default:current_run.provider_key }}</div>
+              <div class="small text-muted">Последний запуск: {{ current_run.created_at|date:"d.m.Y H:i" }}</div>
+              <div class="small text-muted">Файл: {{ current_run.methodology_filename }}</div>
+            </div>
+          </div>
+
+          {% if current_report.summary_cards %}
+            <div class="row g-3 mt-1">
+              {% for card in current_report.summary_cards %}
+                <div class="col-sm-6 col-xl-3">
+                  <div class="ai-metric-card p-3 h-100">
+                    <div class="text-muted small">{{ card.label }}</div>
+                    <div class="fs-4 fw-semibold">{{ card.value }}</div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="p-4">
+          {% if should_present_run %}
+            <div id="ai-thinking-card" class="card ai-think-card shadow-sm mb-4">
+              <div class="card-body">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                  <span class="spinner-border spinner-border-sm text-primary" aria-hidden="true"></span>
+                  <strong id="ai-thinking-title">AI готовит аналитический отчет</strong>
+                </div>
+                <p class="text-muted mb-3" id="ai-thinking-caption">
+                  Модель имитирует пошаговый анализ документа, оценок и модальных расхождений.
+                </p>
+                <div class="d-grid gap-3">
+                  {% for step in presentation_steps %}
+                    <div class="ai-step d-flex align-items-center gap-3" data-step-index="{{ forloop.counter0 }}">
+                      <span class="ai-step-icon">{{ forloop.counter }}</span>
+                      <div>{{ step }}</div>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+          <div id="ai-report-content" class="{% if should_present_run %}ai-report-hidden{% endif %}">
+            {% if current_report.reference_note %}
+              <div class="alert alert-light border mb-4">{{ current_report.reference_note }}</div>
+            {% endif %}
+
+            {% if current_run.methodology_excerpt %}
+              <details class="mb-4">
+                <summary>Фрагмент извлеченного текста методички</summary>
+                <pre class="small mt-3 mb-0" style="white-space: pre-wrap;">{{ current_run.methodology_excerpt }}</pre>
+              </details>
+            {% endif %}
+
+            {% for section in current_report.sections %}
+              <section class="ai-section py-4">
+                <div class="ai-section-title mb-3">{{ section.title }}</div>
+
+                {% if section.kind == "paragraphs" %}
+                  {% for paragraph in section.paragraphs %}
+                    <p class="mb-2">{{ paragraph }}</p>
+                  {% endfor %}
+                {% elif section.kind == "bullets" %}
+                  {% if section.lead %}
+                    <p class="mb-2">{{ section.lead }}</p>
+                  {% endif %}
+                  <ul class="mb-0">
+                    {% for bullet in section.bullets %}
+                      <li class="mb-2">{{ bullet }}</li>
+                    {% endfor %}
+                  </ul>
+                {% elif section.kind == "metrics" %}
+                  <div class="row g-3">
+                    {% for metric in section.metrics %}
+                      <div class="col-md-6">
+                        <div class="ai-metric-card p-3 h-100">
+                          <div class="small text-muted">{{ metric.label }}</div>
+                          <div class="fs-4 fw-semibold">{{ metric.value }}{{ metric.suffix }}</div>
+                        </div>
+                      </div>
+                    {% endfor %}
+                  </div>
+                {% elif section.kind == "table" %}
+                  {% if section.lead %}
+                    <p class="mb-3">{{ section.lead }}</p>
+                  {% endif %}
+                  <div class="table-responsive">
+                    <table class="table table-bordered table-sm align-middle ai-table">
+                      <thead class="table-light">
+                        <tr>
+                          {% for column in section.columns %}
+                            <th>{{ column }}</th>
+                          {% endfor %}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for row in section.rows %}
+                          <tr>
+                            {% for cell in row %}
+                              <td>{{ cell }}</td>
+                            {% endfor %}
+                          </tr>
+                        {% empty %}
+                          <tr>
+                            <td colspan="{{ section.columns|length }}" class="text-muted">Данных для таблицы пока недостаточно.</td>
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                {% endif %}
+              </section>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <p class="text-muted mb-0">
+            Загрузите файл методички, чтобы создать первый AI-отчет по этой программе и открыть его в презентационном режиме.
+          </p>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% if should_present_run %}
+  {{ presentation_steps|json_script:"ai-presentation-steps" }}
+  <script>
+    (function () {
+      const steps = JSON.parse(document.getElementById("ai-presentation-steps").textContent);
+      const stepNodes = Array.from(document.querySelectorAll(".ai-step"));
+      const reportNode = document.getElementById("ai-report-content");
+      const thinkingCard = document.getElementById("ai-thinking-card");
+      const titleNode = document.getElementById("ai-thinking-title");
+      const captionNode = document.getElementById("ai-thinking-caption");
+
+      let index = 0;
+
+      function runStep() {
+        if (index > 0 && stepNodes[index - 1]) {
+          stepNodes[index - 1].classList.remove("active");
+          stepNodes[index - 1].classList.add("done");
+        }
+
+        if (index < stepNodes.length) {
+          stepNodes[index].classList.add("active");
+          titleNode.textContent = "AI анализирует программу";
+          captionNode.textContent = steps[index];
+          index += 1;
+          window.setTimeout(runStep, 1200);
+          return;
+        }
+
+        titleNode.textContent = "AI завершил подготовку отчета";
+        captionNode.textContent = "Отчет собран по шаблону и готов к просмотру или выгрузке в PDF.";
+        reportNode.classList.remove("ai-report-hidden");
+        reportNode.scrollIntoView({ behavior: "smooth", block: "start" });
+        window.setTimeout(function () {
+          if (thinkingCard) {
+            thinkingCard.style.display = "none";
+          }
+        }, 1400);
+      }
+
+      window.setTimeout(runStep, 900);
+    })();
+  </script>
+{% endif %}
+
+{% endblock %}
